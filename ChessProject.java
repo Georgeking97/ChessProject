@@ -175,6 +175,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
     Boolean validMove = false;
     String pieceName;
     Boolean success;
+    Boolean turn = true;
 
     public void mouseReleased(MouseEvent e) {
         if (chessPiece == null) return;
@@ -391,7 +392,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             System.out.println("If the black pawn is in the second position");
             if ((startX - 1 >= 0) || (startX + 1 <= 7)) {
                 System.out.println("if the black pawn moves to a coordinate on the board");
-                if (piecePresent(e.getX(), e.getY()) && (newX == startX + 1) && (startX + 1 <= 7) && (newY == startY - 1) || (newX == (startX - 1) && (startX - 1 >= 0) && (newY == (startY - 1)))) {
+                if ((piecePresent(e.getX(), (e.getY()))) && ((((newX == (startX + 1) && (startX + 1 <= 7))) && (newY - startY == -1) || ((newX == (startX - 1)) && (startX - 1 >= 0)))) && (newY - startY == -1)) {
                     System.out.println("if there is a piece in the coordinates that the black pawn is moving to");
                     if (!checkWhiteOponent(e.getX(), e.getY())) {
                         System.out.println("If the piece is not a black piece");
@@ -446,7 +447,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 } else if ((!checkWhiteOponent(e.getX(), e.getY())) && (pieceName.contains("Black"))) {
                     System.out.println("If the piece in the coordinate the knight is moving to is not black and the piece name contains black that we're moving the result is true");
                     validMove = true;
-                } else{
+                } else {
                     System.out.println("If there is a piece where the knight is moving and it meets neither condition");
                     validMove = false;
                 }
@@ -472,7 +473,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 if ((checkWhiteOponent(e.getX(), e.getY())) && (pieceName.contains("White"))) {
                     System.out.println("if that piece is black and the piece we're moving is white it's a valid move ");
                     validMove = true;
-                } else if ((!checkWhiteOponent(e.getX(), e.getY())) && (pieceName.contains("Black"))){
+                } else if ((!checkWhiteOponent(e.getX(), e.getY())) && (pieceName.contains("Black"))) {
                     System.out.println("if that piece is white and the piece we're moving is black it's a valid move");
                     validMove = true;
                 } else {
@@ -499,8 +500,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 
         int position = Integer.parseInt(Integer.toString(newX) + Integer.toString(newY))
                 - Integer.parseInt(Integer.toString(startX) + Integer.toString(startY));
-
+        System.out.println(value);
         for (int i = 1; i <= value; i++) {
+            System.out.println(i);
             //down and to the left
             if ((position % 9 == 0) && (newX < startX)) {
                 System.out.println("If the newX coordinate is less than the starX coordinate and the coordinate change combination is divisible by 9");
@@ -522,7 +524,6 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 } else {
                     System.out.println("If there is no piece present");
                     validMove = true;
-                    break;
                 }
             }
 
@@ -547,7 +548,6 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 } else {
                     System.out.println("If there is no piece present");
                     validMove = true;
-                    break;
                 }
             }
 
@@ -573,7 +573,6 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 } else {
                     System.out.println("If there is no piece present");
                     validMove = true;
-                    break;
                 }
             }
 
@@ -598,7 +597,6 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 } else {
                     System.out.println("if there isn't a piece where the bishop is moving");
                     validMove = true;
-                    break;
                 }
             } else {
                 System.out.println("if none of the above conditions are met it's a false move");
@@ -606,6 +604,11 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 break;
             }
         }
+        //statement to catch if a move is outside the loop (was occurring when moving up and down the Y axis)
+        if (value == 0) {
+            validMove = false;
+        }
+
     }
 
     public void whiteRook(MouseEvent e) {
@@ -641,7 +644,6 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 } else {
                     System.out.println("if there is no piece present");
                     validMove = true;
-                    break;
                 }
             }
 
@@ -666,7 +668,6 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 } else {
                     System.out.println("if there is no piece present");
                     validMove = true;
-                    break;
                 }
             }
 
@@ -679,7 +680,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                         System.out.println("If the movement is equal to the coordinate of the piece and the piece in that coordinate is black and the piece we're moving is white");
                         validMove = true;
                         break;
-                    } else if ((i == value) && (!checkWhiteOponent((startX) * 75, (startY - i) * 75)) && (pieceName.contains("Black"))){
+                    } else if ((i == value) && (!checkWhiteOponent((startX) * 75, (startY - i) * 75)) && (pieceName.contains("Black"))) {
                         System.out.println("If the movement is equal to the coordinate of the piece and the piece in that coordinate is white and the piece we're moving is black");
                         validMove = true;
                         break;
@@ -715,12 +716,14 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 } else {
                     System.out.println("if there is no piece present");
                     validMove = true;
-                    break;
                 }
             } else {
                 validMove = false;
                 break;
             }
+        }
+        if (value == 0) {
+            validMove = false;
         }
     }
 

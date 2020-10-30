@@ -200,6 +200,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 }
             }
         }
+        
         //other switch where if boolean = false
         if (!validMove) {
             int location = 0;
@@ -497,9 +498,13 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         if (value < 0) {
             value = value * -1;
         }
-
+        //convert start X and Y to strings, add them together = start position x = 1, y = 1
+        //convert end X and Y to strings, add them together = end position
+        //take away end from start
         int position = Integer.parseInt(Integer.toString(newX) + Integer.toString(newY))
                 - Integer.parseInt(Integer.toString(startX) + Integer.toString(startY));
+
+
         System.out.println(value);
         for (int i = 1; i <= value; i++) {
             System.out.println(i);

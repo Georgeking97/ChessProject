@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class AIAgent extends ChessProject{
+public class AIAgent {
     Random rand;
 
     public AIAgent(){

@@ -28,11 +28,13 @@ public class AIAgent {
 
     public Move nextBestMove(Stack possibilities){
         Move selectedMove = new Move();
+        System.out.println("nextBest");
         return selectedMove;
     }
 
     public Move twoLevelsDeep(Stack possibilities){
         Move selectedMove = new Move();
+        System.out.println("advanced");
         return selectedMove;
     }
 }

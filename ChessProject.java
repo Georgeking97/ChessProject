@@ -27,7 +27,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
     Boolean success;
     Boolean turn = true;
     AIAgent agent = new AIAgent();
-    String rand = "rand";
+    static String rand = "rand";
 
 
     public ChessProject() {
@@ -764,87 +764,86 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         int tmpx2 = x - 1;
         int tmpy1 = y + 1;
         int tmpy2 = y + 2;
-        //if the new x cord isn't great than 7
-        if (((tmpx1 <= 7)) && (tmpx2 >= 0) && (!(tmpy1 > 7))) {
-            //x position stays the same, y position plus 1
-            Square tmp = new Square(x, tmpy1, piece);
-            //x position plus 1, y position plus 1 (right)
-            Square tmp1 = new Square(tmpx1, tmpy1, piece);
-            //x position minus 1, y position plus 1 (left)
-            Square tmp2 = new Square(tmpx2, tmpy1, piece);
-            //x position stays the same, y position plus 2
-            Square tmp3 = new Square(x, tmpy2, piece);
 
-            //five moves from the starting position if moving one square
-            //moving right in front of me when no pieces there (1)
-            //if there is a piece in front of me and there's also a piece to the left of me (2)
-            //if there is a piece in front of me and there's also a piece to the right of me (3)
-            //moving down and to the right if there is a piece I can take and there is no piece in front of me(4)
-            //moving down and to the left if there is a piece I can take and there is no piece in front of me(5)
+        //x position stays the same, y position plus 1
+        Square tmp = new Square(x, tmpy1, piece);
+        //x position plus 1, y position plus 1 (right)
+        Square tmp1 = new Square(tmpx1, tmpy1, piece);
+        //x position minus 1, y position plus 1 (left)
+        Square tmp2 = new Square(tmpx2, tmpy1, piece);
+        //x position stays the same, y position plus 2
+        Square tmp3 = new Square(x, tmpy2, piece);
 
-            //one move from the starting position if moving two squares
-            //moving right in front of me when no pieces there (1)
+        //five moves from the starting position if moving one square
+        //moving right in front of me when no pieces there (1)
+        //if there is a piece in front of me and there's also a piece to the left of me (2)
+        //if there is a piece in front of me and there's also a piece to the right of me (3)
+        //moving down and to the right if there is a piece I can take and there is no piece in front of me(4)
+        //moving down and to the left if there is a piece I can take and there is no piece in front of me(5)
 
-            //second position there is five moves
-            //moving right in front of me when no pieces there (1)
-            //if there is a piece in front of me and there's also a piece to the left of me (2)
-            //if there is a piece in front of me and there's also a piece to the right of me (3)
-            //moving down and to the right if there is a piece I can take and there is no piece in front of me(4)
-            //moving down and to the left if there is a piece I can take and there is no piece in front of me(5)
+        //one move from the starting position if moving two squares
+        //moving right in front of me when no pieces there (1)
 
-            //if pawn is in the first position
-            if (startY == 1) {
-                //I know I'm moving two Y cords directly in front of me
-                validM = new Move(startingSquare, tmp3);
-                //I know I'm moving one Y cord directly in front of me
-                validM2 = new Move(startingSquare, tmp);
-                //I know I'm moving down and to the left when there's a piece in front of me
-                validM3 = new Move(startingSquare, tmp2);
-                //I know I'm moving down and to the right when there's a piece in front of me
-                validM4 = new Move(startingSquare, tmp1);
+        //second position there is five moves
+        //moving right in front of me when no pieces there (1)
+        //if there is a piece in front of me and there's also a piece to the left of me (2)
+        //if there is a piece in front of me and there's also a piece to the right of me (3)
+        //moving down and to the right if there is a piece I can take and there is no piece in front of me(4)
+        //moving down and to the left if there is a piece I can take and there is no piece in front of me(5)
 
-                //if there is no piece present in the two squares provided (tmp3 (y+2), tmp(y+1)) valid move
-                if ((!piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20))))) {
-                    moves.push(validM);
+        //if pawn is in the first position, can't use startY doesn't work
+        if (y == 1) {
+            //I know I'm moving two Y cords directly in front of me
+            validM = new Move(startingSquare, tmp3);
+            //I know I'm moving one Y cord directly in front of me
+            validM2 = new Move(startingSquare, tmp);
+            //I know I'm moving down and to the left
+            validM3 = new Move(startingSquare, tmp2);
+            //I know I'm moving down and to the right
+            validM4 = new Move(startingSquare, tmp1);
+
+            //if there is no piece present in the two squares provided (tmp(y+1), tmp3 (y+2)) valid move
+            if (!piecePresent((tmp.getXC() * 75) + 20, (tmp.getYC() * 75) + 20) && !piecePresent((tmp3.getXC() * 75) + 20, (tmp3.getYC() * 75) + 20)) {
+                moves.push(validM);
+            }
+            //is there no piece in front of me when moving one square?
+            if ((!piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) && tmpy1 >= 0 && tmpy1 <= 7) {
+                moves.push(validM2);
+            }
+            //is there a piece to my left?
+            if ((piecePresent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))) && tmpx2 >= 0 && tmpx2 <= 7 && tmpy1 >= 0 && tmpy1 <= 7) {
+                if (checkWhiteOponent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))) {
+                    moves.push(validM3);
                 }
-                //is there no piece in front of me when moving one square?
-                if (!piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))){
-                    moves.push(validM2);
+            }
+            //is there a piece to my right?
+            if ((piecePresent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) && tmpx1 >= 0 && tmpx1 <= 7 && tmpy1 >= 0 && tmpy1 <= 7) {
+                if (checkWhiteOponent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) {
+                    moves.push(validM4);
                 }
-                //is there a piece to my left?
-                if (piecePresent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))){
-                    if (checkWhiteOponent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))){
-                        moves.push(validM3);
-                    }
+            }
+        } else {
+            //I know I'm moving one square in front of me
+            validM2 = new Move(startingSquare, tmp);
+            //I know I'm moving one square in front of me and to the left
+            validM3 = new Move(startingSquare, tmp2);
+            //I know I'm moving one square in front of me and to the right
+            validM4 = new Move(startingSquare, tmp1);
+
+            //is there no piece in front of me when moving one square?
+            if (!piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
+                moves.push(validM2);
+            }
+            //moving forward one piece and to the right if there is a piece there
+            if ((piecePresent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) && tmpx1 >= 0 && tmpx1 <= 7 && tmpy1 >= 0 && tmpy1 <= 7) {
+                if (checkWhiteOponent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) {
+                    moves.push(validM4);
                 }
-                //is there a piece to my right?
-                if ((piecePresent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20))))) {
-                    if (checkWhiteOponent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) {
-                        moves.push(validM4);
-                    }
-                }
-            } else {
-                //I know I'm moving one square in front of me
-                validM2 = new Move(startingSquare, tmp);
-                //I know I'm moving one square in front of me and to the left
-                validM3 = new Move(startingSquare, tmp2);
-                //I know I'm moving one square in front of me and to the right
-                validM4 = new Move(startingSquare, tmp1);
-                //is there no piece in front of me when moving one square?
-                if (!piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
-                    moves.push(validM2);
-                }
-                //moving forward one piece and to the right if there is a piece there
-                if (piecePresent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) {
-                    if (checkWhiteOponent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) {
-                        moves.push(validM4);
-                    }
-                }
-                //moving forward one piece and to the left if there is a piece there
-                if (piecePresent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))){
-                    if (checkWhiteOponent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))){
-                        moves.push(validM3);
-                    }
+            }
+            //moving forward one piece and to the left if there is a piece there
+            if ((piecePresent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20))) && tmpx2 >= 0 && tmpx2 <= 7 && tmpy1 >= 0 && tmpy1 <= 7)) {
+                if (checkWhiteOponent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))) {
+                    moves.push(validM3);
                 }
             }
         }
@@ -1343,6 +1342,12 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             if (rand.contains("rand")) {
                 selectedMove = agent.randomMove(testing);
             }
+            if (rand.contains("best")) {
+                selectedMove = agent.nextBestMove(testing);
+            }
+            if (rand.contains("advanced")) {
+                selectedMove = agent.twoLevelsDeep(testing);
+            }
 
             Square startingPoint = (Square) selectedMove.getStart();
             Square landingPoint = (Square) selectedMove.getLanding();
@@ -1414,11 +1419,13 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         options.setLocation(600, 300);
         options.setVisible(true);
 
+        //setting listeners for the buttons to open other Jframes on click
         randomMove.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 options.setVisible(false);
-                random();
+                openBoard();
+                rand = "rand";
             }
         });
 
@@ -1426,7 +1433,8 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             @Override
             public void actionPerformed(ActionEvent e) {
                 options.setVisible(false);
-                bestChoice();
+                openBoard();
+                rand = "best";
             }
         });
 
@@ -1434,7 +1442,8 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             @Override
             public void actionPerformed(ActionEvent e) {
                 options.setVisible(false);
-                advancedMove();
+                openBoard();
+                rand = "advanced";
             }
         });
     }
@@ -1446,130 +1455,6 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-    }
-
-    public static void random() {
-        JFrame randomMoveOptions = new JFrame();
-        randomMoveOptions.setLayout(new FlowLayout());
-        Dimension Size = new Dimension(600, 80);
-        randomMoveOptions.setSize(Size);
-        randomMoveOptions.setVisible(true);
-        randomMoveOptions.setLocation(600, 300);
-
-        JButton whiteChoice = new JButton("White pieces");
-        JButton blackChoice = new JButton("Black pieces");
-        JButton back = new JButton("Back");
-
-        randomMoveOptions.add(whiteChoice);
-        randomMoveOptions.add(blackChoice);
-        randomMoveOptions.add(back);
-
-        whiteChoice.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                randomMoveOptions.setVisible(false);
-                openBoard();
-            }
-        });
-
-        blackChoice.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                randomMoveOptions.setVisible(false);
-                openBoard();
-            }
-        });
-
-        back.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                randomMoveOptions.setVisible(false);
-                choice();
-            }
-        });
-    }
-
-    public static void bestChoice() {
-        JFrame bestMoveOptions = new JFrame();
-        Dimension Size = new Dimension(600, 80);
-        bestMoveOptions.setLayout(new FlowLayout());
-        bestMoveOptions.setSize(Size);
-        bestMoveOptions.setVisible(true);
-        bestMoveOptions.setLocation(600, 300);
-
-        JButton whiteChoice = new JButton("White pieces");
-        JButton blackChoice = new JButton("Black pieces");
-        JButton back = new JButton("Back");
-
-        bestMoveOptions.add(whiteChoice);
-        bestMoveOptions.add(blackChoice);
-        bestMoveOptions.add(back);
-
-        whiteChoice.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                bestMoveOptions.setVisible(false);
-                openBoard();
-            }
-        });
-
-        blackChoice.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                bestMoveOptions.setVisible(false);
-                openBoard();
-            }
-        });
-
-        back.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                bestMoveOptions.setVisible(false);
-                choice();
-            }
-        });
-
-    }
-
-    public static void advancedMove() {
-        JFrame advancedMoveOptions = new JFrame();
-        Dimension Size = new Dimension(600, 80);
-        advancedMoveOptions.setLayout(new FlowLayout());
-        advancedMoveOptions.setSize(Size);
-        advancedMoveOptions.setLocation(600, 300);
-        advancedMoveOptions.setVisible(true);
-
-        JButton whiteChoice = new JButton("White pieces");
-        JButton blackChoice = new JButton("Black pieces");
-        JButton back = new JButton("Back");
-
-        advancedMoveOptions.add(whiteChoice);
-        advancedMoveOptions.add(blackChoice);
-        advancedMoveOptions.add(back);
-
-        whiteChoice.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                advancedMoveOptions.setVisible(false);
-                openBoard();
-            }
-        });
-
-        blackChoice.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                advancedMoveOptions.setVisible(false);
-                openBoard();
-            }
-        });
-
-        back.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                advancedMoveOptions.setVisible(false);
-                choice();
-            }
-        });
     }
 
     public void mouseClicked(MouseEvent e) {

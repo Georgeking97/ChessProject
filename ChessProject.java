@@ -742,6 +742,24 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         return pieceName;
     }
 
+    public String findpieces (int x, int y) {
+        x = x * 75;
+        y = y * 75;
+        //if there is a component on the board and it is a JLabel
+        if (chessBoard.findComponentAt(x,y) instanceof JLabel){
+            //get the component at that cord
+            Component piece = chessBoard.findComponentAt(x,y);
+            //convert to Jlabel for string parsing later
+            JLabel piece2 = (JLabel) piece;
+            //parse to string
+            String converted =  piece2.getIcon().toString();
+            return converted;
+        } else {
+            //if no jabels found return empty string
+            return "";
+        }
+    }
+
     //checking if the pieces around me aren't a black king piece
     //wtf is the point of that?
     private Boolean checkSurroundingSquares(Square s) {
@@ -766,13 +784,13 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         int tmpy2 = y + 2;
 
         //x position stays the same, y position plus 1
-        Square tmp = new Square(x, tmpy1, piece);
+        Square tmp = new Square(x, tmpy1, findpieces(x,tmpy1));
         //x position plus 1, y position plus 1 (right)
-        Square tmp1 = new Square(tmpx1, tmpy1, piece);
+        Square tmp1 = new Square(tmpx1, tmpy1, findpieces(tmpx1, tmpy1));
         //x position minus 1, y position plus 1 (left)
-        Square tmp2 = new Square(tmpx2, tmpy1, piece);
+        Square tmp2 = new Square(tmpx2, tmpy1, findpieces(tmpx2, tmpy1));
         //x position stays the same, y position plus 2
-        Square tmp3 = new Square(x, tmpy2, piece);
+        Square tmp3 = new Square(x, tmpy2, findpieces(x, tmpy2));
 
         //five moves from the starting position if moving one square
         //moving right in front of me when no pieces there (1)
@@ -860,9 +878,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         int tmpy2 = y - 1;
 
         if (!((tmpx1 > 7))) {
-            Square tmp = new Square(tmpx1, y, piece);
-            Square tmp1 = new Square(tmpx1, tmpy1, piece);
-            Square tmp2 = new Square(tmpx1, tmpy2, piece);
+            Square tmp = new Square(tmpx1, y, findpieces(tmpx1, y));
+            Square tmp1 = new Square(tmpx1, tmpy1, findpieces(tmpx1, tmpy1));
+            Square tmp2 = new Square(tmpx1, tmpy2, findpieces(tmpx1, tmpy2));
             if (checkSurroundingSquares(tmp)) {
                 validM = new Move(startingSquare, tmp);
                 if (!piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
@@ -900,9 +918,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             }
         }
         if (!((tmpx2 < 0))) {
-            Square tmp3 = new Square(tmpx2, y, piece);
-            Square tmp4 = new Square(tmpx2, tmpy1, piece);
-            Square tmp5 = new Square(tmpx2, tmpy2, piece);
+            Square tmp3 = new Square(tmpx2, y, findpieces(tmpx2,y));
+            Square tmp4 = new Square(tmpx2, tmpy1, findpieces(tmpx2, tmpy1));
+            Square tmp5 = new Square(tmpx2, tmpy2, findpieces(tmpx2, tmpy2));
             if (checkSurroundingSquares(tmp3)) {
                 validM = new Move(startingSquare, tmp3);
                 if (!piecePresent(((tmp3.getXC() * 75) + 20), (((tmp3.getYC() * 75) + 20)))) {
@@ -938,8 +956,8 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 }
             }
         }
-        Square tmp7 = new Square(x, tmpy1, piece);
-        Square tmp8 = new Square(x, tmpy2, piece);
+        Square tmp7 = new Square(x, tmpy1, findpieces(x, tmpy1));
+        Square tmp8 = new Square(x, tmpy2, findpieces(x, tmpy2));
         if (!(tmpy1 > 7)) {
             if (checkSurroundingSquares(tmp7)) {
                 validM2 = new Move(startingSquare, tmp7);
@@ -971,29 +989,12 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         Square startingSquare = new Square(x, y, piece);
         Stack moves = new Stack();
         Move validM, validM2, validM3, validM4;
-  /*
-    There are four possible directions that the Rook can move to:
-      - the x value is increasing
-      - the x value is decreasing
-      - the y value is increasing
-      - the y value is decreasing
 
-    Each of these movements should be catered for. The loop guard is set to incriment up to the maximun number of squares.
-    On each iteration of the first loop we are adding the value of i to the current x coordinate.
-    We make sure that the new potential square is going to be on the board and if it is we create a new square and a new potential
-    move (originating square, new square).If there are no pieces present on the potential square we simply add it to the Stack
-    of potential moves.
-    If there is a piece on the square we need to check if its an opponent piece. If it is an opponent piece its a valid move, but we
-    must break out of the loop using the Java break keyword as we can't jump over the piece and search for squares. If its not
-    an opponent piece we simply break out of the loop.
-
-    This cycle needs to happen four times for each of the possible directions of the Rook.
-  */
         for (int i = 1; i < 8; i++) {
             int tmpx = x + i;
             int tmpy = y;
             if (!(tmpx > 7 || tmpx < 0)) {
-                Square tmp = new Square(tmpx, tmpy, piece);
+                Square tmp = new Square(tmpx, tmpy, findpieces(tmpx, tmpy));
                 validM = new Move(startingSquare, tmp);
                 if (!piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
                     moves.push(validM);
@@ -1011,7 +1012,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             int tmpx1 = x - j;
             int tmpy1 = y;
             if (!(tmpx1 > 7 || tmpx1 < 0)) {
-                Square tmp2 = new Square(tmpx1, tmpy1, piece);
+                Square tmp2 = new Square(tmpx1, tmpy1, findpieces(tmpx1, tmpy1));
                 validM2 = new Move(startingSquare, tmp2);
                 if (!piecePresent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))) {
                     moves.push(validM2);
@@ -1029,7 +1030,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             int tmpx3 = x;
             int tmpy3 = y + k;
             if (!(tmpy3 > 7 || tmpy3 < 0)) {
-                Square tmp3 = new Square(tmpx3, tmpy3, piece);
+                Square tmp3 = new Square(tmpx3, tmpy3, findpieces(tmpx3, tmpy3));
                 validM3 = new Move(startingSquare, tmp3);
                 if (!piecePresent(((tmp3.getXC() * 75) + 20), (((tmp3.getYC() * 75) + 20)))) {
                     moves.push(validM3);
@@ -1047,7 +1048,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             int tmpx4 = x;
             int tmpy4 = y - l;
             if (!(tmpy4 > 7 || tmpy4 < 0)) {
-                Square tmp4 = new Square(tmpx4, tmpy4, piece);
+                Square tmp4 = new Square(tmpx4, tmpy4, findpieces(tmpx4, tmpy4));
                 validM4 = new Move(startingSquare, tmp4);
                 if (!piecePresent(((tmp4.getXC() * 75) + 20), (((tmp4.getYC() * 75) + 20)))) {
                     moves.push(validM4);
@@ -1087,7 +1088,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             int tmpx = x + i;
             int tmpy = y + i;
             if (!(tmpx > 7 || tmpx < 0 || tmpy > 7 || tmpy < 0)) {
-                Square tmp = new Square(tmpx, tmpy, piece);
+                Square tmp = new Square(tmpx, tmpy, findpieces(tmpx, tmpy));
                 validM = new Move(startingSquare, tmp);
                 if (!piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
                     moves.push(validM);
@@ -1105,7 +1106,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             int tmpk = x + k;
             int tmpy2 = y - k;
             if (!(tmpk > 7 || tmpk < 0 || tmpy2 > 7 || tmpy2 < 0)) {
-                Square tmpK1 = new Square(tmpk, tmpy2, piece);
+                Square tmpK1 = new Square(tmpk, tmpy2, findpieces(tmpk, tmpy2));
                 validM2 = new Move(startingSquare, tmpK1);
                 if (!piecePresent(((tmpK1.getXC() * 75) + 20), (((tmpK1.getYC() * 75) + 20)))) {
                     moves.push(validM2);
@@ -1123,7 +1124,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             int tmpL2 = x - l;
             int tmpy3 = y + l;
             if (!(tmpL2 > 7 || tmpL2 < 0 || tmpy3 > 7 || tmpy3 < 0)) {
-                Square tmpLMov2 = new Square(tmpL2, tmpy3, piece);
+                Square tmpLMov2 = new Square(tmpL2, tmpy3, findpieces(tmpL2, tmpy3));
                 validM3 = new Move(startingSquare, tmpLMov2);
                 if (!piecePresent(((tmpLMov2.getXC() * 75) + 20), (((tmpLMov2.getYC() * 75) + 20)))) {
                     moves.push(validM3);
@@ -1141,7 +1142,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             int tmpN2 = x - n;
             int tmpy4 = y - n;
             if (!(tmpN2 > 7 || tmpN2 < 0 || tmpy4 > 7 || tmpy4 < 0)) {
-                Square tmpNmov2 = new Square(tmpN2, tmpy4, piece);
+                Square tmpNmov2 = new Square(tmpN2, tmpy4, findpieces(tmpN2, tmpy4));
                 validM4 = new Move(startingSquare, tmpNmov2);
                 if (!piecePresent(((tmpNmov2.getXC() * 75) + 20), (((tmpNmov2.getYC() * 75) + 20)))) {
                     moves.push(validM4);
@@ -1302,17 +1303,17 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 
             //identifying the moves possible and assigning them to a stack
             if (tmpString.contains("Knight")) {
-                //tmpMoves = getKnightMoves(s.getXC(), s.getYC(), s.getName());
+                tmpMoves = getKnightMoves(s.getXC(), s.getYC(), s.getName());
             } else if (tmpString.contains("Bishup")) {
-                //tmpMoves = getBishopMoves(s.getXC(), s.getYC(), s.getName());
+                tmpMoves = getBishopMoves(s.getXC(), s.getYC(), s.getName());
             } else if (tmpString.contains("Pawn")) {
                 tmpMoves = getWhitePawnSquares(s.getXC(), s.getYC(), s.getName());
             } else if (tmpString.contains("Rook")) {
-                //tmpMoves = getRookMoves(s.getXC(), s.getYC(), s.getName());
+                tmpMoves = getRookMoves(s.getXC(), s.getYC(), s.getName());
             } else if (tmpString.contains("Queen")) {
-                //tmpMoves = getQueenMoves(s.getXC(), s.getYC(), s.getName());
+                tmpMoves = getQueenMoves(s.getXC(), s.getYC(), s.getName());
             } else if (tmpString.contains("King")) {
-                //tmpMoves = getKingSquares(s.getXC(), s.getYC(), s.getName());
+                tmpMoves = getKingSquares(s.getXC(), s.getYC(), s.getName());
             }
 
             while (!tmpMoves.empty()) {
@@ -1334,7 +1335,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 Move tmpMove = (Move) completeMoves.pop();
                 Square s1 = (Square) tmpMove.getStart();
                 Square s2 = (Square) tmpMove.getLanding();
-                System.out.println("The " + s1.getName() + " can move from (" + s1.getXC() + ", " + s1.getYC() + ") to the following square: (" + s2.getXC() + ", " + s2.getYC() + ")");
+                //System.out.println("The " + s1.getName() + " can move from (" + s1.getXC() + ", " + s1.getYC() + ") to the following square: (" + s2.getXC() + ", " + s2.getYC() + ")");
                 testing.push(tmpMove);
             }
             System.out.println("=============================================================");
@@ -1355,7 +1356,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             int startY1 = (startingPoint.getYC() * 75) + 20;
             int landingX1 = (landingPoint.getXC() * 75) + 20;
             int landingY1 = (landingPoint.getYC() * 75) + 20;
-            System.out.println("-------- Move " + startingPoint.getName() + " (" + startingPoint.getXC() + ", " + startingPoint.getYC() + ") to (" + landingPoint.getXC() + ", " + landingPoint.getYC() + ")");
+            //System.out.println("-------- Move " + startingPoint.getName() + " (" + startingPoint.getXC() + ", " + startingPoint.getYC() + ") to (" + landingPoint.getXC() + ", " + landingPoint.getYC() + ")");
 
             Component c = (JLabel) chessBoard.findComponentAt(startX1, startY1);
             Container parent = c.getParent();

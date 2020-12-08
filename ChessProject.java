@@ -25,7 +25,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
     Boolean validMove = false;
     String pieceName;
     Boolean success;
-    Boolean turn = true;
+    //Boolean turn = true;
     AIAgent agent = new AIAgent();
     static String rand = "rand";
 
@@ -190,7 +190,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         pieceName = tmp.substring(0, (tmp.length() - 4));
         validMove = false;
 
-        if (pieceName.contains("white")) {
+        if (pieceName.contains("White")) {
             switch (pieceName) {
                 case "WhitePawn" -> whitePawn(e);
                 case "WhiteKnight" -> whiteKnight(e);
@@ -272,12 +272,18 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 chessPiece.setVisible(true);
             }
             makeAIMove();
+
         }
     }
 
     public void whitePawn(MouseEvent e) {
         int newY = e.getY() / 75;
         int newX = e.getX() / 75;
+
+        if (e.getX() > 590 || e.getX() < 0 || e.getY() < 0 || e.getY() > 590) {
+            validMove = false;
+            return;
+        }
 
         System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         if (startY == 1) {
@@ -360,10 +366,15 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         int newY = e.getY() / 75;
         int newX = e.getX() / 75;
 
+        if (e.getX() > 590 || e.getX() < 0 || e.getY() < 0 || e.getY() > 590) {
+            validMove = false;
+            return;
+        }
+
         System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         if (startY == 6) {
             System.out.println("if the black pawn is in the first position");
-            if ((startX == newX) && (e.getY() / 75 - startY == -1) || (e.getY() / 75 - startY == -2)) {
+            if ((startX == newX) && (e.getY() / 75 - startY == -1) || (startX == newX) && (e.getY() / 75 - startY == -2)) {
                 System.out.println("If the black pawn moves one or two Y coordinates from the first position");
                 if (newY - startY == -2) {
                     System.out.println("If the black pawn moves two Y coordinates from the first position");
@@ -441,6 +452,11 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         int newY = e.getY() / 75;
         int newX = e.getX() / 75;
 
+        if (e.getX() > 590 || e.getX() < 0 || e.getY() < 0 || e.getY() > 590) {
+            validMove = false;
+            return;
+        }
+
         System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         if ((startX + 2 == newX && startY + 1 == newY) || (startX + 2 == newX && startY - 1 == newY) || (startX - 2 == newX && startY + 1 == newY) || (startX - 2 == newX && startY - 1 == newY) || (startX + 1 == newX && startY + 2 == newY) || (startX + 1 == newX && startY - 2 == newY) || (startX - 1 == newX && startY + 2 == newY) || (startX - 1 == newX && startY - 2 == newY)) {
             System.out.println("If the piece moves in one of the valid knight movements");
@@ -469,6 +485,11 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
     public void whiteKing(MouseEvent e) {
         int newY = e.getY() / 75;
         int newX = e.getX() / 75;
+
+        if (e.getX() > 590 || e.getX() < 0 || e.getY() < 0 || e.getY() > 590) {
+            validMove = false;
+            return;
+        }
 
         System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         if ((startX == newX && startY + 1 == newY) || (startX == newX && startY - 1 == newY) || (startX + 1 == newX && startY == newY) || (startX - 1 == newX && startY == newY) || (startX + 1 == newX && startY + 1 == newY) || (startX - 1 == newX && startY - 1 == newY) || (startX - 1 == newX && startY + 1 == newY) || (startX + 1 == newX && startY - 1 == newY)) {
@@ -499,6 +520,11 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         int newY = e.getY() / 75;
         int newX = e.getX() / 75;
         int value = startX - newX;
+
+        if (e.getX() > 590 || e.getX() < 0 || e.getY() < 0 || e.getY() > 590) {
+            validMove = false;
+            return;
+        }
 
         System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
@@ -631,7 +657,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             value = value * -1;
         }
 
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        if (e.getX() > 590 || e.getX() < 0 || e.getY() < 0 || e.getY() > 590) {
+            validMove = false;
+            return;
+        }
 
         for (int i = 1; i <= value; i++) {
             //going left on the x axis
@@ -742,17 +771,17 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         return pieceName;
     }
 
-    public String findpieces (int x, int y) {
+    public String findpieces(int x, int y) {
         x = x * 75;
         y = y * 75;
         //if there is a component on the board and it is a JLabel
-        if (chessBoard.findComponentAt(x,y) instanceof JLabel){
+        if (chessBoard.findComponentAt(x, y) instanceof JLabel) {
             //get the component at that cord
-            Component piece = chessBoard.findComponentAt(x,y);
+            Component piece = chessBoard.findComponentAt(x, y);
             //convert to Jlabel for string parsing later
             JLabel piece2 = (JLabel) piece;
             //parse to string
-            String converted =  piece2.getIcon().toString();
+            String converted = piece2.getIcon().toString();
             return converted;
         } else {
             //if no jabels found return empty string
@@ -761,7 +790,6 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
     }
 
     //checking if the pieces around me aren't a black king piece
-    //wtf is the point of that?
     private Boolean checkSurroundingSquares(Square s) {
         Boolean possible = false;
         int x = s.getXC() * 75;
@@ -783,60 +811,118 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         int tmpy1 = y + 1;
         int tmpy2 = y + 2;
 
-        //x position stays the same, y position plus 1
-        Square tmp = new Square(x, tmpy1, findpieces(x,tmpy1));
-        //x position plus 1, y position plus 1 (right)
+
+        Square tmp = new Square(x, tmpy1, findpieces(x, tmpy1));
+
         Square tmp1 = new Square(tmpx1, tmpy1, findpieces(tmpx1, tmpy1));
-        //x position minus 1, y position plus 1 (left)
+
         Square tmp2 = new Square(tmpx2, tmpy1, findpieces(tmpx2, tmpy1));
-        //x position stays the same, y position plus 2
+
         Square tmp3 = new Square(x, tmpy2, findpieces(x, tmpy2));
 
-        //five moves from the starting position if moving one square
-        //moving right in front of me when no pieces there (1)
-        //if there is a piece in front of me and there's also a piece to the left of me (2)
-        //if there is a piece in front of me and there's also a piece to the right of me (3)
-        //moving down and to the right if there is a piece I can take and there is no piece in front of me(4)
-        //moving down and to the left if there is a piece I can take and there is no piece in front of me(5)
 
-        //one move from the starting position if moving two squares
-        //moving right in front of me when no pieces there (1)
-
-        //second position there is five moves
-        //moving right in front of me when no pieces there (1)
-        //if there is a piece in front of me and there's also a piece to the left of me (2)
-        //if there is a piece in front of me and there's also a piece to the right of me (3)
-        //moving down and to the right if there is a piece I can take and there is no piece in front of me(4)
-        //moving down and to the left if there is a piece I can take and there is no piece in front of me(5)
-
-        //if pawn is in the first position, can't use startY doesn't work
         if (y == 1) {
-            //I know I'm moving two Y cords directly in front of me
+
             validM = new Move(startingSquare, tmp3);
-            //I know I'm moving one Y cord directly in front of me
             validM2 = new Move(startingSquare, tmp);
-            //I know I'm moving down and to the left
+
             validM3 = new Move(startingSquare, tmp2);
-            //I know I'm moving down and to the right
+
             validM4 = new Move(startingSquare, tmp1);
 
-            //if there is no piece present in the two squares provided (tmp(y+1), tmp3 (y+2)) valid move
             if (!piecePresent((tmp.getXC() * 75) + 20, (tmp.getYC() * 75) + 20) && !piecePresent((tmp3.getXC() * 75) + 20, (tmp3.getYC() * 75) + 20)) {
                 moves.push(validM);
             }
-            //is there no piece in front of me when moving one square?
+
             if ((!piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) && tmpy1 >= 0 && tmpy1 <= 7) {
                 moves.push(validM2);
             }
-            //is there a piece to my left?
+
             if ((piecePresent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))) && tmpx2 >= 0 && tmpx2 <= 7 && tmpy1 >= 0 && tmpy1 <= 7) {
                 if (checkWhiteOponent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))) {
                     moves.push(validM3);
                 }
             }
-            //is there a piece to my right?
+
             if ((piecePresent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) && tmpx1 >= 0 && tmpx1 <= 7 && tmpy1 >= 0 && tmpy1 <= 7) {
                 if (checkWhiteOponent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) {
+                    moves.push(validM4);
+                }
+            }
+        } else {
+
+            validM2 = new Move(startingSquare, tmp);
+
+            validM3 = new Move(startingSquare, tmp2);
+
+            validM4 = new Move(startingSquare, tmp1);
+
+
+            if (!piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
+                moves.push(validM2);
+            }
+
+            if ((piecePresent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) && tmpx1 >= 0 && tmpx1 <= 7 && tmpy1 >= 0 && tmpy1 <= 7) {
+                if (checkWhiteOponent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) {
+                    moves.push(validM4);
+                }
+            }
+
+            if ((piecePresent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20))) && tmpx2 >= 0 && tmpx2 <= 7 && tmpy1 >= 0 && tmpy1 <= 7)) {
+                if (checkWhiteOponent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))) {
+                    moves.push(validM3);
+                }
+            }
+        }
+        return moves;
+    }
+
+    private Stack getBlackPawnSquares(int x, int y, String piece) {
+        Stack moves = new Stack();
+        Square startingSquare = new Square(x, y, piece);
+
+        Move validM, validM2, validM3, validM4;
+
+        int tmpx1 = x + 1;
+        int tmpx2 = x - 1;
+        int tmpy1 = y - 1;
+        int tmpy2 = y - 2;
+
+
+        Square tmp = new Square(x, tmpy1, findpieces(x, tmpy1));
+
+        Square tmp1 = new Square(tmpx1, tmpy1, findpieces(tmpx1, tmpy1));
+
+        Square tmp2 = new Square(tmpx2, tmpy1, findpieces(tmpx2, tmpy1));
+
+        Square tmp3 = new Square(x, tmpy2, findpieces(x, tmpy2));
+
+        if (y == 6) {
+
+            validM = new Move(startingSquare, tmp3);
+
+            validM2 = new Move(startingSquare, tmp);
+
+            validM3 = new Move(startingSquare, tmp2);
+
+            validM4 = new Move(startingSquare, tmp1);
+
+            if (!piecePresent((tmp.getXC() * 75) + 20, (tmp.getYC() * 75) + 20) && !piecePresent((tmp3.getXC() * 75) + 20, (tmp3.getYC() * 75) + 20)) {
+                moves.push(validM);
+            }
+
+            if ((!piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) && tmpy1 >= 0 && tmpy1 <= 7) {
+                moves.push(validM2);
+            }
+
+            if ((piecePresent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))) && tmpx2 >= 0 && tmpx2 <= 7 && tmpy1 >= 0 && tmpy1 <= 7) {
+                if (!checkWhiteOponent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))) {
+                    moves.push(validM3);
+                }
+            }
+            //is there a piece to my right?
+            if ((piecePresent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) && tmpx1 >= 0 && tmpx1 <= 7 && tmpy1 >= 0 && tmpy1 <= 7) {
+                if (!checkWhiteOponent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) {
                     moves.push(validM4);
                 }
             }
@@ -854,13 +940,13 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             }
             //moving forward one piece and to the right if there is a piece there
             if ((piecePresent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) && tmpx1 >= 0 && tmpx1 <= 7 && tmpy1 >= 0 && tmpy1 <= 7) {
-                if (checkWhiteOponent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) {
+                if (!checkWhiteOponent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) {
                     moves.push(validM4);
                 }
             }
             //moving forward one piece and to the left if there is a piece there
             if ((piecePresent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20))) && tmpx2 >= 0 && tmpx2 <= 7 && tmpy1 >= 0 && tmpy1 <= 7)) {
-                if (checkWhiteOponent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))) {
+                if (!checkWhiteOponent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))) {
                     moves.push(validM3);
                 }
             }
@@ -886,7 +972,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 if (!piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
                     moves.push(validM);
                 } else {
-                    if (checkWhiteOponent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
+                    if ((checkWhiteOponent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) && piece.contains("White")) {
+                        moves.push(validM);
+                    } else if ((!checkWhiteOponent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) && piece.contains("Black")) {
                         moves.push(validM);
                     }
                 }
@@ -897,7 +985,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                     if (!piecePresent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) {
                         moves.push(validM2);
                     } else {
-                        if (checkWhiteOponent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) {
+                        if ((checkWhiteOponent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) && piece.contains("White")) {
+                            moves.push(validM2);
+                        } else if ((!checkWhiteOponent(((tmp1.getXC() * 75) + 20), (((tmp1.getYC() * 75) + 20)))) && piece.contains("Black")) {
                             moves.push(validM2);
                         }
                     }
@@ -910,7 +1000,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                         moves.push(validM3);
                     } else {
                         System.out.println("The values that we are going to be looking at are : " + ((tmp2.getXC() * 75) + 20) + " and the y value is : " + ((tmp2.getYC() * 75) + 20));
-                        if (checkWhiteOponent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))) {
+                        if ((checkWhiteOponent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))) && piece.contains("White")) {
+                            moves.push(validM3);
+                        } else if ((!checkWhiteOponent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))) && piece.contains("Black")) {
                             moves.push(validM3);
                         }
                     }
@@ -918,7 +1010,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             }
         }
         if (!((tmpx2 < 0))) {
-            Square tmp3 = new Square(tmpx2, y, findpieces(tmpx2,y));
+            Square tmp3 = new Square(tmpx2, y, findpieces(tmpx2, y));
             Square tmp4 = new Square(tmpx2, tmpy1, findpieces(tmpx2, tmpy1));
             Square tmp5 = new Square(tmpx2, tmpy2, findpieces(tmpx2, tmpy2));
             if (checkSurroundingSquares(tmp3)) {
@@ -926,7 +1018,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 if (!piecePresent(((tmp3.getXC() * 75) + 20), (((tmp3.getYC() * 75) + 20)))) {
                     moves.push(validM);
                 } else {
-                    if (checkWhiteOponent(((tmp3.getXC() * 75) + 20), (((tmp3.getYC() * 75) + 20)))) {
+                    if ((checkWhiteOponent(((tmp3.getXC() * 75) + 20), (((tmp3.getYC() * 75) + 20)))) && piece.contains("White")) {
+                        moves.push(validM);
+                    } else if ((!checkWhiteOponent(((tmp3.getXC() * 75) + 20), (((tmp3.getYC() * 75) + 20)))) && piece.contains("Black")) {
                         moves.push(validM);
                     }
                 }
@@ -937,7 +1031,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                     if (!piecePresent(((tmp4.getXC() * 75) + 20), (((tmp4.getYC() * 75) + 20)))) {
                         moves.push(validM2);
                     } else {
-                        if (checkWhiteOponent(((tmp4.getXC() * 75) + 20), (((tmp4.getYC() * 75) + 20)))) {
+                        if ((checkWhiteOponent(((tmp4.getXC() * 75) + 20), (((tmp4.getYC() * 75) + 20)))) && piece.contains("White")) {
+                            moves.push(validM2);
+                        } else if ((!checkWhiteOponent(((tmp4.getXC() * 75) + 20), (((tmp4.getYC() * 75) + 20)))) && piece.contains("Black")) {
                             moves.push(validM2);
                         }
                     }
@@ -949,7 +1045,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                     if (!piecePresent(((tmp5.getXC() * 75) + 20), (((tmp5.getYC() * 75) + 20)))) {
                         moves.push(validM3);
                     } else {
-                        if (checkWhiteOponent(((tmp5.getXC() * 75) + 20), (((tmp5.getYC() * 75) + 20)))) {
+                        if ((checkWhiteOponent(((tmp5.getXC() * 75) + 20), (((tmp5.getYC() * 75) + 20)))) && piece.contains("White")) {
+                            moves.push(validM3);
+                        } else if ((!checkWhiteOponent(((tmp5.getXC() * 75) + 20), (((tmp5.getYC() * 75) + 20)))) && piece.contains("Black")) {
                             moves.push(validM3);
                         }
                     }
@@ -964,7 +1062,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 if (!piecePresent(((tmp7.getXC() * 75) + 20), (((tmp7.getYC() * 75) + 20)))) {
                     moves.push(validM2);
                 } else {
-                    if (checkWhiteOponent(((tmp7.getXC() * 75) + 20), (((tmp7.getYC() * 75) + 20)))) {
+                    if ((checkWhiteOponent(((tmp7.getXC() * 75) + 20), (((tmp7.getYC() * 75) + 20)))) && piece.contains("White")) {
+                        moves.push(validM2);
+                    } else if ((!checkWhiteOponent(((tmp7.getXC() * 75) + 20), (((tmp7.getYC() * 75) + 20)))) && piece.contains("Black")) {
                         moves.push(validM2);
                     }
                 }
@@ -976,7 +1076,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 if (!piecePresent(((tmp8.getXC() * 75) + 20), (((tmp8.getYC() * 75) + 20)))) {
                     moves.push(validM3);
                 } else {
-                    if (checkWhiteOponent(((tmp8.getXC() * 75) + 20), (((tmp8.getYC() * 75) + 20)))) {
+                    if ((checkWhiteOponent(((tmp8.getXC() * 75) + 20), (((tmp8.getYC() * 75) + 20)))) && piece.contains("White")) {
+                        moves.push(validM3);
+                    } else if ((!checkWhiteOponent(((tmp8.getXC() * 75) + 20), (((tmp8.getYC() * 75) + 20)))) && piece.contains("Black")) {
                         moves.push(validM3);
                     }
                 }
@@ -999,7 +1101,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 if (!piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
                     moves.push(validM);
                 } else {
-                    if (checkWhiteOponent(((tmp.getXC() * 75) + 20), ((tmp.getYC() * 75) + 20))) {
+                    if ((checkWhiteOponent(((tmp.getXC() * 75) + 20), ((tmp.getYC() * 75) + 20))) && piece.contains("White")) {
+                        moves.push(validM);
+                        break;
+                    } else if ((!checkWhiteOponent(((tmp.getXC() * 75) + 20), ((tmp.getYC() * 75) + 20))) && piece.contains("Black")) {
                         moves.push(validM);
                         break;
                     } else {
@@ -1017,7 +1122,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 if (!piecePresent(((tmp2.getXC() * 75) + 20), (((tmp2.getYC() * 75) + 20)))) {
                     moves.push(validM2);
                 } else {
-                    if (checkWhiteOponent(((tmp2.getXC() * 75) + 20), ((tmp2.getYC() * 75) + 20))) {
+                    if ((checkWhiteOponent(((tmp2.getXC() * 75) + 20), ((tmp2.getYC() * 75) + 20))) && piece.contains("White")) {
+                        moves.push(validM2);
+                        break;
+                    } else if ((!checkWhiteOponent(((tmp2.getXC() * 75) + 20), ((tmp2.getYC() * 75) + 20))) && piece.contains("Black")) {
                         moves.push(validM2);
                         break;
                     } else {
@@ -1035,7 +1143,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 if (!piecePresent(((tmp3.getXC() * 75) + 20), (((tmp3.getYC() * 75) + 20)))) {
                     moves.push(validM3);
                 } else {
-                    if (checkWhiteOponent(((tmp3.getXC() * 75) + 20), ((tmp3.getYC() * 75) + 20))) {
+                    if ((checkWhiteOponent(((tmp3.getXC() * 75) + 20), ((tmp3.getYC() * 75) + 20))) && piece.contains("White")) {
+                        moves.push(validM3);
+                        break;
+                    } else if ((!checkWhiteOponent(((tmp3.getXC() * 75) + 20), ((tmp3.getYC() * 75) + 20))) && piece.contains("Black")) {
                         moves.push(validM3);
                         break;
                     } else {
@@ -1053,7 +1164,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 if (!piecePresent(((tmp4.getXC() * 75) + 20), (((tmp4.getYC() * 75) + 20)))) {
                     moves.push(validM4);
                 } else {
-                    if (checkWhiteOponent(((tmp4.getXC() * 75) + 20), ((tmp4.getYC() * 75) + 20))) {
+                    if ((checkWhiteOponent(((tmp4.getXC() * 75) + 20), ((tmp4.getYC() * 75) + 20))) && piece.contains("White")) {
+                        moves.push(validM4);
+                        break;
+                    } else if ((!checkWhiteOponent(((tmp4.getXC() * 75) + 20), ((tmp4.getYC() * 75) + 20))) && piece.contains("Black")) {
                         moves.push(validM4);
                         break;
                     } else {
@@ -1069,21 +1183,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         Square startingSquare = new Square(x, y, piece);
         Stack moves = new Stack();
         Move validM, validM2, validM3, validM4;
-  /*
-    The Bishop can move along any diagonal until it hits an enemy piece or its own piece
-    it cannot jump over its own piece. We need to use four different loops to go through the possible movements
-    to identify possible squares to move to. The temporary squares, i.e. the values of x and y must change by the
-    same amount on each iteration of each of the loops.
 
-    If the new values of x and y are on the board, we create a new square and a new move (from the original square to the new
-    square). We then check if there is a piece present on the new square:
-    - if not we add the move as a possible new move
-    - if there is a piece we make sure that we can capture our opponents piece and we cannot take our own piece
-      and then we break out of the loop
-
-    This process is repeated for each of the other three possible diagonals that the Bishop can travel along.
-
-  */
         for (int i = 1; i < 8; i++) {
             int tmpx = x + i;
             int tmpy = y + i;
@@ -1093,7 +1193,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 if (!piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
                     moves.push(validM);
                 } else {
-                    if (checkWhiteOponent(((tmp.getXC() * 75) + 20), ((tmp.getYC() * 75) + 20))) {
+                    if ((checkWhiteOponent(((tmp.getXC() * 75) + 20), ((tmp.getYC() * 75) + 20))) && piece.contains("White")) {
+                        moves.push(validM);
+                        break;
+                    } else if ((!checkWhiteOponent(((tmp.getXC() * 75) + 20), ((tmp.getYC() * 75) + 20))) && piece.contains("Black")) {
                         moves.push(validM);
                         break;
                     } else {
@@ -1111,7 +1214,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 if (!piecePresent(((tmpK1.getXC() * 75) + 20), (((tmpK1.getYC() * 75) + 20)))) {
                     moves.push(validM2);
                 } else {
-                    if (checkWhiteOponent(((tmpK1.getXC() * 75) + 20), ((tmpK1.getYC() * 75) + 20))) {
+                    if ((checkWhiteOponent(((tmpK1.getXC() * 75) + 20), ((tmpK1.getYC() * 75) + 20))) && piece.contains("White")) {
+                        moves.push(validM2);
+                        break;
+                    } else if ((!checkWhiteOponent(((tmpK1.getXC() * 75) + 20), ((tmpK1.getYC() * 75) + 20))) && piece.contains("Black")) {
                         moves.push(validM2);
                         break;
                     } else {
@@ -1129,7 +1235,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 if (!piecePresent(((tmpLMov2.getXC() * 75) + 20), (((tmpLMov2.getYC() * 75) + 20)))) {
                     moves.push(validM3);
                 } else {
-                    if (checkWhiteOponent(((tmpLMov2.getXC() * 75) + 20), ((tmpLMov2.getYC() * 75) + 20))) {
+                    if ((checkWhiteOponent(((tmpLMov2.getXC() * 75) + 20), ((tmpLMov2.getYC() * 75) + 20))) && piece.contains("White")) {
+                        moves.push(validM3);
+                        break;
+                    } else if ((!checkWhiteOponent(((tmpLMov2.getXC() * 75) + 20), ((tmpLMov2.getYC() * 75) + 20))) && piece.contains("Black")) {
                         moves.push(validM3);
                         break;
                     } else {
@@ -1147,7 +1256,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 if (!piecePresent(((tmpNmov2.getXC() * 75) + 20), (((tmpNmov2.getYC() * 75) + 20)))) {
                     moves.push(validM4);
                 } else {
-                    if (checkWhiteOponent(((tmpNmov2.getXC() * 75) + 20), ((tmpNmov2.getYC() * 75) + 20))) {
+                    if ((checkWhiteOponent(((tmpNmov2.getXC() * 75) + 20), ((tmpNmov2.getYC() * 75) + 20))) && piece.contains("White")) {
+                        moves.push(validM4);
+                        break;
+                    } else if ((!checkWhiteOponent(((tmpNmov2.getXC() * 75) + 20), ((tmpNmov2.getYC() * 75) + 20))) && piece.contains("Black")) {
                         moves.push(validM4);
                         break;
                     } else {
@@ -1186,21 +1298,21 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         Square startingSquare = new Square(x, y, piece);
         Stack moves = new Stack();
         Stack attackingMove = new Stack();
-        Square s = new Square(x + 1, y + 2, piece);
+        Square s = new Square(x + 1, y + 2, findpieces((x + 1), (y + 2)));
         moves.push(s);
-        Square s1 = new Square(x + 1, y - 2, piece);
+        Square s1 = new Square(x + 1, y - 2, findpieces((x + 1), (y - 2)));
         moves.push(s1);
-        Square s2 = new Square(x - 1, y + 2, piece);
+        Square s2 = new Square(x - 1, y + 2, findpieces((x - 1), (y + 2)));
         moves.push(s2);
-        Square s3 = new Square(x - 1, y - 2, piece);
+        Square s3 = new Square(x - 1, y - 2, findpieces((x - 1), (y - 2)));
         moves.push(s3);
-        Square s4 = new Square(x + 2, y + 1, piece);
+        Square s4 = new Square(x + 2, y + 1, findpieces((x + 2), (y + 1)));
         moves.push(s4);
-        Square s5 = new Square(x + 2, y - 1, piece);
+        Square s5 = new Square(x + 2, y - 1, findpieces((x + 2), (y - 1)));
         moves.push(s5);
-        Square s6 = new Square(x - 2, y + 1, piece);
+        Square s6 = new Square(x - 2, y + 1, findpieces((x - 2), (y + 1)));
         moves.push(s6);
-        Square s7 = new Square(x - 2, y - 1, piece);
+        Square s7 = new Square(x - 2, y - 1, findpieces((x - 2), (y - 1)));
         moves.push(s7);
 
         for (int i = 0; i < 8; i++) {
@@ -1211,6 +1323,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             } else if (piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
                 if (piece.contains("White")) {
                     if (checkWhiteOponent(((tmp.getXC() * 75) + 20), ((tmp.getYC() * 75) + 20))) {
+                        attackingMove.push(tmpmove);
+                    }
+                } else if (piece.contains("Black")) {
+                    if (!checkWhiteOponent(((tmp.getXC() * 75) + 20), ((tmp.getYC() * 75) + 20))) {
                         attackingMove.push(tmpmove);
                     }
                 }
@@ -1268,6 +1384,31 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         return squares;
     }
 
+    private Stack findBlackPieces() {
+        Stack squares = new Stack();
+        String icon;
+        int x;
+        int y;
+        String pieceName;
+        for (int i = 0; i < 600; i += 75) {
+            for (int j = 0; j < 600; j += 75) {
+                y = i / 75;
+                x = j / 75;
+                Component tmp = chessBoard.findComponentAt(j, i);
+                if (tmp instanceof JLabel) {
+                    chessPiece = (JLabel) tmp;
+                    icon = chessPiece.getIcon().toString();
+                    pieceName = icon.substring(0, (icon.length() - 4));
+                    if (pieceName.contains("Black")) {
+                        Square stmp = new Square(x, y, pieceName);
+                        squares.push(stmp);
+                    }
+                }
+            }
+        }
+        return squares;
+    }
+
     private void resetBorders() {
         Border empty = BorderFactory.createEmptyBorder();
         for (int i = 0; i < 64; i++) {
@@ -1292,16 +1433,20 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         layeredPane.validate();
         layeredPane.repaint();
         Stack white = findWhitePieces();
+        Stack black = findBlackPieces();
         Stack completeMoves = new Stack();
+        Stack completeMoves2 = new Stack();
         Move tmp;
         Move selectedMove = null;
         Stack temporary = new Stack();
+        Stack temporary2 = new Stack();
+
+
         while (!white.empty()) {
             Square s = (Square) white.pop();
             String tmpString = s.getName();
             Stack tmpMoves = new Stack();
 
-            //identifying the moves possible and assigning them to a stack
             if (tmpString.contains("Knight")) {
                 tmpMoves = getKnightMoves(s.getXC(), s.getYC(), s.getName());
             } else if (tmpString.contains("Bishup")) {
@@ -1321,16 +1466,48 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 completeMoves.push(tmp);
             }
         }
-        temporary = (Stack) completeMoves.clone();
-        getLandingSquares(temporary);
-        printStack(temporary);
+        System.out.println(completeMoves.size());
 
-        if (completeMoves.size() == 0) {
+        while (!black.empty()) {
+            Square s = (Square) black.pop();
+            String tmpString = s.getName();
+            Stack tmpMoves2 = new Stack();
+
+            if (tmpString.contains("Knight")) {
+                tmpMoves2 = getKnightMoves(s.getXC(), s.getYC(), s.getName());
+            } else if (tmpString.contains("Bishup")) {
+                tmpMoves2 = getBishopMoves(s.getXC(), s.getYC(), s.getName());
+            } else if (tmpString.contains("Pawn")) {
+                tmpMoves2 = getBlackPawnSquares(s.getXC(), s.getYC(), s.getName());
+            } else if (tmpString.contains("Rook")) {
+                tmpMoves2 = getRookMoves(s.getXC(), s.getYC(), s.getName());
+            } else if (tmpString.contains("Queen")) {
+                tmpMoves2 = getQueenMoves(s.getXC(), s.getYC(), s.getName());
+            } else if (tmpString.contains("King")) {
+                tmpMoves2 = getKingSquares(s.getXC(), s.getYC(), s.getName());
+            }
+
+            while (!tmpMoves2.empty()) {
+                tmp = (Move) tmpMoves2.pop();
+                completeMoves2.push(tmp);
+            }
+        }
+        System.out.println(completeMoves2.size());
+
+        temporary = (Stack) completeMoves.clone();
+        //getLandingSquares(temporary);
+
+        temporary2 = (Stack) completeMoves2.clone();
+        getLandingSquares(temporary2);
+
+
+        if (completeMoves2.size() == 0) {
             JOptionPane.showMessageDialog(null, "Cogratulations, you have placed the AI component in a Stale Mate Position");
             System.exit(0);
         } else {
             System.out.println("=============================================================");
             Stack testing = new Stack();
+            Stack testing2 = new Stack();
             while (!completeMoves.empty()) {
                 Move tmpMove = (Move) completeMoves.pop();
                 Square s1 = (Square) tmpMove.getStart();
@@ -1338,16 +1515,24 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 //System.out.println("The " + s1.getName() + " can move from (" + s1.getXC() + ", " + s1.getYC() + ") to the following square: (" + s2.getXC() + ", " + s2.getYC() + ")");
                 testing.push(tmpMove);
             }
+            while (!completeMoves2.empty()) {
+                Move tmpMove = (Move) completeMoves2.pop();
+                Square s1 = (Square) tmpMove.getStart();
+                Square s2 = (Square) tmpMove.getLanding();
+                //System.out.println("The " + s1.getName() + " can move from (" + s1.getXC() + ", " + s1.getYC() + ") to the following square: (" + s2.getXC() + ", " + s2.getYC() + ")");
+                testing2.push(tmpMove);
+            }
+
             System.out.println("=============================================================");
             Border redBorder = BorderFactory.createLineBorder(Color.RED, 3);
             if (rand.contains("rand")) {
-                selectedMove = agent.randomMove(testing);
+                selectedMove = agent.randomMove(testing2);
             }
             if (rand.contains("best")) {
-                selectedMove = agent.nextBestMove(testing);
+                selectedMove = agent.nextBestMove(testing2);
             }
             if (rand.contains("advanced")) {
-                selectedMove = agent.twoLevelsDeep(testing);
+                selectedMove = agent.twoLevelsDeep(testing, testing2);
             }
 
             Square startingPoint = (Square) selectedMove.getStart();
@@ -1372,7 +1557,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 JLabel awaitingName = (JLabel) l;
                 String agentCaptured = awaitingName.getIcon().toString();
                 boolean agentwins = false;
-                if (agentCaptured.contains("BlackKing")) {
+                if (agentCaptured.contains("WhiteKing")) {
                     agentwins = true;
                 }
                 parentlanding.remove(l);
@@ -1386,7 +1571,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 layeredPane.repaint();
 
                 if (agentwins) {
-                    JOptionPane.showMessageDialog(null, "The AI Agent has won!");
+                    JOptionPane.showMessageDialog(null, "You have lost, understandable depending on what mode you selected");
                     System.exit(0);
                 }
             } else {
@@ -1398,7 +1583,21 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 layeredPane.validate();
                 layeredPane.repaint();
             }
-            boolean white2Move = true;
+
+            Stack blackpieces = findBlackPieces();
+            boolean captured = false;
+
+            while(!blackpieces.isEmpty()){
+                Square king = (Square) blackpieces.pop();
+
+                if (king.getName().contains("BlackKing")) {
+                    captured = true;
+                }
+            }
+            if (captured==false){
+                JOptionPane.showMessageDialog(null, "You have won, good job depending on what mode you selected");
+                System.exit(0);
+            }
         }
     }
 

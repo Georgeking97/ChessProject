@@ -11,11 +11,9 @@ public class AIAgent {
 
     public Move randomMove(Stack possibilities) {
         int moveID = rand.nextInt(possibilities.size());
-
         for (int i = 1; i < (possibilities.size() - (moveID)); i++) {
             possibilities.pop();
         }
-
         Move selectedMove = (Move) possibilities.pop();
         return selectedMove;
     }
@@ -25,48 +23,43 @@ public class AIAgent {
         Stack numbers = new Stack();
         Stack clone = (Stack) possibilities.clone();
         int score = 0;
-
-        System.out.println("Possibilities size before loop: " + possibilities.size());
         for (int i = 0; i < clone.size(); i++) {
             Move currentMove = (Move) possibilities.pop();
 
-            if (currentMove.getLanding().getName().isEmpty() && score <= 1) {
-                if (score != 1) {
-                    System.out.println("does it make it in here?");
-                    numbers.clear();
-                }
+            if (currentMove.getLanding().getName().isEmpty() && (currentMove.getLanding().getYC() == 3 || currentMove.getLanding().getYC() == 4) && (score <= 1))  {
                 score = 1;
                 numbers.add(currentMove);
             }
-            if (currentMove.getLanding().getName().contains("BlackPawn") && score <= 2) {
+            if (currentMove.getLanding().getName().contains("Pawn") && score <= 2) {
                 if (score != 2) {
                     numbers.clear();
                 }
                 score = 2;
                 numbers.add(currentMove);
             }
-            if (currentMove.getLanding().getName().contains("BlackRook") && score <= 5) {
+            if (currentMove.getLanding().getName().contains("Rook") && score <= 5) {
                 if (score != 5) {
                     numbers.clear();
                 }
                 score = 5;
                 numbers.add(currentMove);
             }
-            if (currentMove.getLanding().getName().contains("BlackKnight") && score <= 3) {
+            if (currentMove.getLanding().getName().contains("Knight") && score <= 3) {
+                System.out.println("hello there");
                 if (score != 3) {
                     numbers.clear();
                 }
                 score = 3;
                 numbers.add(currentMove);
             }
-            if (currentMove.getLanding().getName().contains("BlackQueen") && score <= 9) {
+            if (currentMove.getLanding().getName().contains("Queen") && score <= 9) {
                 if (score != 9) {
                     numbers.clear();
                 }
                 score = 9;
                 numbers.add(currentMove);
             }
-            if (currentMove.getLanding().getName().contains("BlackBishup") && score <= 3) {
+            if (currentMove.getLanding().getName().contains("Bishup") && score <= 3) {
                 if (score != 3) {
                     numbers.clear();
                 }
@@ -74,7 +67,7 @@ public class AIAgent {
                 numbers.add(currentMove);
 
             }
-            if (currentMove.getLanding().getName().contains("BlackKing") && score <= 10) {
+            if (currentMove.getLanding().getName().contains("King") && score <= 10) {
                 if (score != 10) {
                     numbers.clear();
                 }
@@ -82,26 +75,47 @@ public class AIAgent {
                 numbers.add(currentMove);
             }
         }
-        System.out.println("numbers size after loop: " + numbers.size());
-        int moveID = rand.nextInt(numbers.size());
-        System.out.println("possibilities size after loop: " + possibilities.size());
-        System.out.println("numbers size after loop: " + numbers.size());
-        for (int i = 1; i < (numbers.size() - (moveID)); i++) {
-            numbers.pop();
-        }
-        return (Move) numbers.pop();
+        return randomMove(numbers);
     }
 
-    public Move twoLevelsDeep(Stack possibilities) {
-        //Move selectedMove = new Move();
+    public Move twoLevelsDeep(Stack possibilities, Stack possibilities2) {
+        Stack white = (Stack) possibilities.clone();
+        Stack black = (Stack) possibilities2.clone();
+        Stack value = new Stack();
+        Move blackMove = (Move) black.pop();
+        int scoreWhite = 0;
+        int scoreBlack = 0;
+        int scoreHighestWhite = 0;
+        int scoreHighestBlack = 0;
 
-        Move test = nextBestMove(possibilities);
-        System.out.println(test);
+        for (int i =0;i<possibilities.size();i++){
+            Move whiteMove = (Move) white.pop();
+            if (whiteMove.getLanding().getName().isEmpty() && (whiteMove.getLanding().getYC() == 3 || whiteMove.getLanding().getYC() == 4))  {
+                scoreWhite = 1;
+            }
+            if (whiteMove.getLanding().getName().contains("Pawn")) {
+                scoreWhite = 2;
+            }
+            if (whiteMove.getLanding().getName().contains("Rook")) {
+                scoreWhite = 5;
+            }
+            if (whiteMove.getLanding().getName().contains("Knight")) {
+                scoreWhite = 3;
+            }
+            if (whiteMove.getLanding().getName().contains("Queen")) {
+                scoreWhite = 9;
+            }
+            if (whiteMove.getLanding().getName().contains("Bishup")) {
+                scoreWhite = 3;
+            }
+            if (whiteMove.getLanding().getName().contains("King")) {
+                scoreWhite = 10;
+            }
+            if (scoreWhite > scoreHighestWhite){
+                scoreHighestWhite = scoreWhite;
+            }
+        }
 
-        //find best move(s) for white pieces
-        //
-
-
-        return test;
+        return nextBestMove(possibilities2);
     }
 }
